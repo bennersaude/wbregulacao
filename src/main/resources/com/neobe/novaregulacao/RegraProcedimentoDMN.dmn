@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dmn:definitions xmlns:dmn="http://www.omg.org/spec/DMN/20180521/MODEL/" xmlns="com.neobe.novaregulacao" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:kie="http://www.drools.org/kie/dmn/1.2" xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="_F2A021E1-F98C-42AB-9E3B-A7A19A47EDC4" name="NovaRegulacao.RegraProcedimentoDMN" expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" typeLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" namespace="com.neobe.novaregulacao">
+  <dmn:extensionElements/>
+  <dmn:inputData id="_AE0E43D5-08E0-4688-8A61-35D812BAC661" name="procedimento">
+    <dmn:variable id="_1B32BC68-F011-4604-9464-1D805F719D73" name="procedimento" typeRef="string"/>
+  </dmn:inputData>
+  <dmn:decision id="_310FEA30-0C22-4EED-9749-6FE1906CCDF0" name="validar">
+    <dmn:variable id="_344BE319-E154-4D91-BCA8-DECBDF67897C" name="validar" typeRef="boolean"/>
+    <dmn:informationRequirement id="_D27A7108-3C53-4633-9D1D-51AD59CFF467">
+      <dmn:requiredInput href="#_AE0E43D5-08E0-4688-8A61-35D812BAC661"/>
+    </dmn:informationRequirement>
+    <dmn:decisionTable id="_43D70A99-D158-4AAC-AA19-9FF7BF77B45A" hitPolicy="ANY" preferredOrientation="Rule-as-Row">
+      <dmn:input id="_E55399BB-4DA1-44AF-AFC1-0F95EF9205C7">
+        <dmn:inputExpression id="_ACFB9E8B-6E3C-4EC3-8ADA-9E6BB2617526" typeRef="string">
+          <dmn:text>procedimento</dmn:text>
+        </dmn:inputExpression>
+      </dmn:input>
+      <dmn:output id="_94AA7280-AB5C-4328-80B7-DBB88EE868F0" typeRef="boolean"/>
+      <dmn:rule id="_FD391B08-DE7E-4B25-A760-E03F5AD20B07">
+        <dmn:inputEntry id="_1538BD7E-F344-40F9-9D56-80D610D2151A">
+          <dmn:text>"10101012"</dmn:text>
+        </dmn:inputEntry>
+        <dmn:outputEntry id="_F929C068-41AA-4981-BA42-1C11A5D58139">
+          <dmn:text>false</dmn:text>
+        </dmn:outputEntry>
+      </dmn:rule>
+      <dmn:rule id="_96A7BCA1-B222-4758-A83C-262432D3B765">
+        <dmn:inputEntry id="_545C028D-20F3-4198-B516-77DA5F326D9C">
+          <dmn:text>-</dmn:text>
+        </dmn:inputEntry>
+        <dmn:outputEntry id="_034A1B1F-D5C9-463A-8E17-303C90705179">
+          <dmn:text>true</dmn:text>
+        </dmn:outputEntry>
+      </dmn:rule>
+    </dmn:decisionTable>
+  </dmn:decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape id="dmnshape-_AE0E43D5-08E0-4688-8A61-35D812BAC661" dmnElementRef="_AE0E43D5-08E0-4688-8A61-35D812BAC661" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="176" y="276" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-_310FEA30-0C22-4EED-9749-6FE1906CCDF0" dmnElementRef="_310FEA30-0C22-4EED-9749-6FE1906CCDF0" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="488" y="160" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="dmnedge-_D27A7108-3C53-4633-9D1D-51AD59CFF467" dmnElementRef="_D27A7108-3C53-4633-9D1D-51AD59CFF467">
+        <di:waypoint x="226" y="301"/>
+        <di:waypoint x="538" y="210"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</dmn:definitions>

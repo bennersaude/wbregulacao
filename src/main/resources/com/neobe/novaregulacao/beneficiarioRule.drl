@@ -1,0 +1,140 @@
+package com.neobe.novaregulacao;
+
+import com.neobe.novaregulacao.ContextoExecucaoProcesso;
+import com.neobe.novaregulacao.Beneficiario;
+import com.neobe.novaregulacao.Negativa;
+import com.neobe.novaregulacao.GuiaSolicitacao;
+import com.neobe.novaregulacao.RetornoProcesso;
+
+import java.util.ArrayList;  
+import java.util.List;
+import java.io.Serializable;
+
+
+rule "1015 - Idade do beneficiário acima idade limite (Dia do aniversário)"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $beneficiario: Beneficiario(idadeAnos >= idadeMaximaPlano) from $guiaSolicitacao.beneficiario
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1015,'1015', 'Idade do beneficiario acima idade limite (Dia do aniversario)');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);
+end
+
+rule "1015 - Idade do beneficiário acima idade limite (Dia posterior ao aniversário)"
+    enabled false
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $beneficiario: Beneficiario(idadeAnos >= idadeMaximaPlano && (idadeMeses >= 1 || idadeDias > 0)) from $guiaSolicitacao.beneficiario
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1015,'1015', 'Idade do beneficiario acima idade limite (Dia posterior ao aniversario)');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);
+end
+
+rule "1015 - Idade do beneficiário acima idade limite (Próximo aniversário)"
+    enabled false
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $beneficiario: Beneficiario(idadeAnos > idadeMaximaPlano) from $guiaSolicitacao.beneficiario
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1015,'1015', 'Idade do beneficiario acima idade limite (Proximo aniversario)');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);
+end
+
+rule "1016 - Beneficiário com atendimento suspenso"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso();
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao;
+        $beneficiario: Beneficiario(suspenso == true) from $guiaSolicitacao.beneficiario;
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1016,'1016', 'Beneficiario com atendimento suspenso');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);
+end
+
+rule "1017 - Beneficiário com atendimento suspenso"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $beneficiario: Beneficiario(suspenso == true) from $guiaSolicitacao.beneficiario
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1017, '1017', 'Beneficiario com atendimento suspenso');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);      
+end
+
+rule "1006 - Atendimento após desligamento do beneficiário"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso();
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao;
+        $beneficiario: Beneficiario(inativo == true) from $guiaSolicitacao.beneficiario;
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1006,'1006', 'Atendimento após desligamento do beneficiário');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);
+end
+
+rule "1020 - Via de cartão do beneficiário cancelada"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso();
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao;
+        $beneficiario: Beneficiario(cartaoCancelado == true) from $guiaSolicitacao.beneficiario;
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1020,'1020', 'Via de cartão do beneficiário cancelada');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);
+end
+
+rule "1021 - Via de cartão do beneficiário não liberada"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso();
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao;
+        $beneficiario: Beneficiario(cartaoBloqueado == true) from $guiaSolicitacao.beneficiario;
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1021,'1021', 'Via de cartão do beneficiário não liberada');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);
+end

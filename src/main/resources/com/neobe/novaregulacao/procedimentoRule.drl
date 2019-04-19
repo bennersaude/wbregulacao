@@ -1,0 +1,115 @@
+package com.neobe.novaregulacao;
+
+import com.neobe.novaregulacao.ContextoExecucaoProcesso;
+import com.neobe.novaregulacao.Beneficiario;
+import com.neobe.novaregulacao.Negativa;
+import com.neobe.novaregulacao.GuiaSolicitacao;
+import com.neobe.novaregulacao.Solicitante;
+import com.neobe.novaregulacao.ProcedimentoSolicitado;
+
+import java.util.ArrayList;  
+import java.util.List;
+import java.io.Serializable;
+
+rule "1423 - Quantidade solicitada acima da quantidade permitida"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $procedimentoSolicitado: ProcedimentoSolicitado(possuiControleDeOcorrenciaMaximaNaVida == true && (quantidade + contagemOcorrenciaMaximaProcedimento) > ocorrenciaMaximaNaVida) from $guiaSolicitacao.getProcedimentosSolicitados()
+    then
+        $negativas = $procedimentoSolicitado.getNegativas()
+        $nova = new Negativa(1423, '1423', 'Quantidade solicitada acima da quantidade permitida')
+        $negativas.add($nova)
+
+        $procedimentoSolicitado.setNegativas($negativas)
+        insert($negativas)
+end
+
+rule "1801 - Procedimento inválido"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $procedimentoSolicitado: ProcedimentoSolicitado(estaVigenteNaDataSolicitacao == false) from $guiaSolicitacao.getProcedimentosSolicitados()
+    then
+        $negativas = $procedimentoSolicitado.getNegativas()
+        $nova = new Negativa(1801, '1801', 'Procedimento inválido')
+        $negativas.add($nova)
+
+        $procedimentoSolicitado.setNegativas($negativas)
+        insert($negativas)
+end
+
+rule "1802 - Procedimento incompatível com o sexo do beneficiário"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $procedimentoSolicitado: ProcedimentoSolicitado(ehPermitidoParaSexoDoBeneficiario == false) from $guiaSolicitacao.getProcedimentosSolicitados()
+    then
+        $negativas = $procedimentoSolicitado.getNegativas()
+        $nova = new Negativa(1802, '1802', 'Procedimento incompatível com o sexo do beneficiário')
+        $negativas.add($nova)
+
+        $procedimentoSolicitado.setNegativas($negativas)
+        insert($negativas)
+end
+
+rule "1803 - Idade do beneficiário incompatível com o procedimento"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $beneficiario: Beneficiario() from $guiaSolicitacao.getBeneficiario()
+        $procedimentoSolicitado: ProcedimentoSolicitado(($beneficiario.idadeAnos < idadeMinima) || ($beneficiario.idadeAnos > idadeMaxima)) from $guiaSolicitacao.getProcedimentosSolicitados()
+    then
+        $negativas = $procedimentoSolicitado.getNegativas()
+        $nova = new Negativa(1803, '1803', 'Idade do beneficiário incompatível com o procedimento')
+        $negativas.add($nova)
+
+        $procedimentoSolicitado.setNegativas($negativas)
+        insert($negativas)
+end
+
+rule "3024 - Evento só possível em dentes decíduos"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $procedimentoSolicitado: ProcedimentoSolicitado(possuiRestricaoDenteDeciduo == true) from $guiaSolicitacao.getProcedimentosSolicitados()
+    then
+        $negativas = $procedimentoSolicitado.getNegativas()
+        $nova = new Negativa(3024, '3024', 'Evento só possível em dentes decíduos')
+        $negativas.add($nova)
+
+        $procedimentoSolicitado.setNegativas($negativas)
+        insert($negativas)
+end
+
+rule "3025 - Evento só possível em dentes permanentes"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $procedimentoSolicitado: ProcedimentoSolicitado(possuiRestricaoDentePermanente == true) from $guiaSolicitacao.getProcedimentosSolicitados()
+    then
+        $negativas = $procedimentoSolicitado.getNegativas()
+        $nova = new Negativa(3025, '3025', 'Evento só possível em dentes permanentes')
+        $negativas.add($nova)
+
+        $procedimentoSolicitado.setNegativas($negativas)
+        insert($negativas)
+end

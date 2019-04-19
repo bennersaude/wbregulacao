@@ -1,0 +1,29 @@
+package com.neobe.novaregulacao;
+
+import com.neobe.novaregulacao.ContextoExecucaoProcesso;
+import com.neobe.novaregulacao.Beneficiario;
+import com.neobe.novaregulacao.Negativa;
+import com.neobe.novaregulacao.GuiaSolicitacao;
+import com.neobe.novaregulacao.Solicitante;
+
+
+import java.util.ArrayList;  
+import java.util.List;
+import java.io.Serializable;
+
+
+rule "1214 - Credenciado não habilitado a realizar o procedimento"
+    enabled true
+    ruleflow-group "elegibilidade_beneficiario"
+    dialect "mvel"
+    when
+        $contexto: ContextoExecucaoProcesso()
+        $guiaSolicitacao: GuiaSolicitacao() from $contexto.guiaSolicitacao
+        $solicitante: Solicitante(afastado == true || bloqueado == true) from $guiaSolicitacao.solicitante
+    then
+        $negativas = $guiaSolicitacao.getNegativas();
+        $nova = new Negativa(1214,'1214', 'Credenciado não habilitado a realizar o procedimento');
+        $negativas.add($nova);
+        $guiaSolicitacao.setNegativas($negativas);
+        insert($negativas);
+end
